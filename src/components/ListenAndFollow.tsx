@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { listenPhrases } from "@/data/words";
+import { listenPhrases as fallbackPhrases } from "@/data/words";
+import { supabase } from "@/integrations/supabase/client";
 import { Play, ChevronRight, ChevronLeft, RotateCcw, Volume2, User } from "lucide-react";
 
 type VoiceGender = "male" | "female";
@@ -35,6 +36,20 @@ export default function ListenAndFollow() {
   const [voiceGender, setVoiceGender] = useState<VoiceGender>("female");
   const [voicesLoaded, setVoicesLoaded] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const [listenPhrases, setListenPhrases] = useState(fallbackPhrases);
+  const [loading, setLoading] = useState(true);
+  const [isDaily, setIsDaily] = useState(false);
+
+  useEffect(() => {
+    supabase.functions.invoke("daily-phrases").then(({ data, error }) => {
+      if (!error && Array.isArray(data?.phrases) && data.phrases.length) {
+        setListenPhrases(data.phrases);
+        setIsDaily(true);
+        setCurrentIndex(0);
+      }
+      setLoading(false);
+    });
+  }, []);
 
   useEffect(() => {
     const loadVoices = () => {
@@ -93,8 +108,22 @@ export default function ListenAndFollow() {
     { label: "♂ Male", value: "male" },
   ];
 
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center gap-3 py-16 text-muted-foreground">
+        <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+        <p className="text-sm">Preparing today's phrases…</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center gap-8 w-full max-w-xl mx-auto">
+      <p className="text-xs text-muted-foreground -mb-4">
+        {isDaily
+          ? `Today's fresh phrases · ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long" })}`
+          : "Showing classic phrases (today's set is unavailable)"}
+      </p>
       {/* Voice & Speed selectors */}
       <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-6">
         {/* Voice gender */}
