@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Mic, Headphones, ArrowLeft } from "lucide-react";
+import { Mic, Headphones, ArrowLeft, Video } from "lucide-react";
 import RandomWordPractice from "@/components/RandomWordPractice";
 import ListenAndFollow from "@/components/ListenAndFollow";
+import VideoRecordingPractice from "@/components/VideoRecordingPractice";
 
-type Mode = "home" | "random" | "listen";
+type Mode = "home" | "random" | "listen" | "video";
 
 const Index = () => {
   const [mode, setMode] = useState<Mode>("home");
@@ -21,16 +22,18 @@ const Index = () => {
           </button>
 
           <h1 className="text-3xl font-display text-foreground mb-2 animate-fade-up">
-            {mode === "random" ? "Random Word Practice" : "Listen & Follow Along"}
+            {mode === "random" ? "Random Word Practice" : mode === "listen" ? "Listen & Follow Along" : "Video Recording Practice"}
           </h1>
           <p className="text-muted-foreground mb-10 animate-fade-up" style={{ animationDelay: "80ms" }}>
             {mode === "random"
               ? "Say each word clearly. Focus on pronunciation and mouth shape."
-              : "Listen carefully, then repeat. Match the rhythm and intonation."}
+              : mode === "listen"
+              ? "Listen carefully, then repeat. Match the rhythm and intonation."
+              : "Pick a topic and time, then speak to the camera. Watch it back to spot what to improve."}
           </p>
 
           <div className="animate-fade-up" style={{ animationDelay: "160ms" }}>
-            {mode === "random" ? <RandomWordPractice /> : <ListenAndFollow />}
+            {mode === "random" ? <RandomWordPractice /> : mode === "listen" ? <ListenAndFollow /> : <VideoRecordingPractice />}
           </div>
         </div>
       </div>
@@ -86,6 +89,23 @@ const Index = () => {
                 <h2 className="text-lg font-display text-foreground mb-1">Listen & Follow Along</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   Hear a native speaker say common phrases, then mimic the accent and rhythm.
+                </p>
+              </div>
+            </div>
+          </button>
+          <button
+            onClick={() => setMode("video")}
+            className="w-full group bg-card hover:bg-card/80 border border-border/60 rounded-2xl p-6 text-left transition-all duration-300 hover:shadow-md active:scale-[0.98] animate-fade-up"
+            style={{ animationDelay: "280ms" }}
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
+                <Video className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-lg font-display text-foreground mb-1">Video Recording Practice</h2>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Record yourself on the front camera for 5–20 minutes on a topic, then save the video.
                 </p>
               </div>
             </div>
