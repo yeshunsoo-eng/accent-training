@@ -3,11 +3,14 @@ import { Mic, Headphones, ArrowLeft, Video } from "lucide-react";
 import RandomWordPractice from "@/components/RandomWordPractice";
 import ListenAndFollow from "@/components/ListenAndFollow";
 import VideoRecordingPractice from "@/components/VideoRecordingPractice";
+import ProgressCard from "@/components/ProgressCard";
+import StatsPanel from "@/components/StatsPanel";
 
 type Mode = "home" | "random" | "listen" | "video";
 
 const Index = () => {
   const [mode, setMode] = useState<Mode>("home");
+  const [statsOpen, setStatsOpen] = useState(false);
 
   if (mode !== "home") {
     return (

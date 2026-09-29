@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { recordActivity } from "@/lib/stats";
 import { Circle, Square, Download, RotateCcw, Shuffle, Camera } from "lucide-react";
 
 const DURATIONS = [5, 10, 15, 20];
@@ -65,7 +66,9 @@ export default function VideoRecordingPractice() {
   const stopRecording = useCallback(() => {
     recorderRef.current?.state === "recording" && recorderRef.current.stop();
     setRecording(false);
-  }, []);
+    const elapsed = Math.max(0, duration * 60 - timeLeft);
+    if (elapsed > 0) recordActivity({ seconds: elapsed, videoSeconds: elapsed });
+  }, [duration, timeLeft]);
 
   useEffect(() => {
     if (!recording) return;
