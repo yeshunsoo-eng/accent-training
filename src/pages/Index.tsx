@@ -3,11 +3,14 @@ import { Mic, Headphones, ArrowLeft, Video } from "lucide-react";
 import RandomWordPractice from "@/components/RandomWordPractice";
 import ListenAndFollow from "@/components/ListenAndFollow";
 import VideoRecordingPractice from "@/components/VideoRecordingPractice";
+import ProgressCard from "@/components/ProgressCard";
+import StatsPanel from "@/components/StatsPanel";
 
 type Mode = "home" | "random" | "listen" | "video";
 
 const Index = () => {
   const [mode, setMode] = useState<Mode>("home");
+  const [statsOpen, setStatsOpen] = useState(false);
 
   if (mode !== "home") {
     return (
@@ -54,6 +57,11 @@ const Index = () => {
           <p className="text-muted-foreground text-lg leading-relaxed">
             Train your English pronunciation with guided exercises and real-time practice.
           </p>
+        </div>
+
+        {/* Progress summary */}
+        <div className="mb-6 animate-fade-up" style={{ animationDelay: "80ms" }}>
+          <ProgressCard onOpen={() => setStatsOpen(true)} />
         </div>
 
         {/* Mode cards */}
@@ -116,6 +124,8 @@ const Index = () => {
           Uses your browser's speech engine · No data leaves your device
         </p>
       </div>
+
+      {statsOpen && <StatsPanel onClose={() => setStatsOpen(false)} />}
     </div>
   );
 };
