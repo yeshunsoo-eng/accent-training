@@ -134,7 +134,7 @@ export function summarise(data: StatsData = loadStats()): StatsSummary {
       videoSeconds: acc.videoSeconds + d.videoSeconds,
       activeDays: acc.activeDays + (isActive(d) ? 1 : 0),
     }),
-    { ...emptyDay(), activeDays: 0 }
+    { ...emptyDay(), activeDays: 0 } as DayStats & { activeDays: number }
   );
 
   const weekMinutes = Math.round(
