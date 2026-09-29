@@ -124,6 +124,8 @@ const Index = () => {
           Uses your browser's speech engine · No data leaves your device
         </p>
       </div>
+
+      {statsOpen && <StatsPanel onClose={() => setStatsOpen(false)} />}
     </div>
   );
 };
