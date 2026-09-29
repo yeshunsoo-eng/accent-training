@@ -1,6 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { listenPhrases as fallbackPhrases } from "@/data/words";
 import { supabase } from "@/integrations/supabase/client";
+import { recordActivity } from "@/lib/stats";
+import { usePracticeClock } from "@/hooks/use-practice-clock";
 import { Play, ChevronRight, ChevronLeft, RotateCcw, Volume2, User } from "lucide-react";
 
 type VoiceGender = "male" | "female";
@@ -64,6 +66,8 @@ export default function ListenAndFollow() {
 
   const phrase = listenPhrases[currentIndex];
 
+  usePracticeClock(!loading);
+
   const speak = useCallback(() => {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
@@ -76,7 +80,10 @@ export default function ListenAndFollow() {
     if (voice) utterance.voice = voice;
 
     utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      recordActivity({ phrases: 1 });
+    };
     utterance.onerror = () => setIsSpeaking(false);
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);

@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getRandomWord } from "@/data/words";
+import { recordActivity } from "@/lib/stats";
+import { usePracticeClock } from "@/hooks/use-practice-clock";
 import { Play, Pause, RotateCcw, Volume2 } from "lucide-react";
 
 const DURATIONS = [
@@ -17,10 +19,13 @@ export default function RandomWordPractice() {
   const [wordsSpoken, setWordsSpoken] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  usePracticeClock(isRunning);
+
   const nextWord = useCallback(() => {
     setCurrentWord(getRandomWord());
     setWordKey((k) => k + 1);
     setWordsSpoken((c) => c + 1);
+    recordActivity({ words: 1 });
   }, []);
 
   const speakWord = useCallback(() => {
