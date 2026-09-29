@@ -126,7 +126,7 @@ export function summarise(data: StatsData = loadStats()): StatsSummary {
     return { key, label: labels[d.getDay()], active: isActive(data.days[key]), isToday: offset === 0 };
   });
 
-  const totals = Object.values(data.days).reduce(
+  const totals = Object.values(data.days).reduce<DayStats & { activeDays: number }>(
     (acc, d) => ({
       seconds: acc.seconds + d.seconds,
       words: acc.words + d.words,
@@ -134,7 +134,7 @@ export function summarise(data: StatsData = loadStats()): StatsSummary {
       videoSeconds: acc.videoSeconds + d.videoSeconds,
       activeDays: acc.activeDays + (isActive(d) ? 1 : 0),
     }),
-    { ...emptyDay(), activeDays: 0 } as DayStats & { activeDays: number }
+    { ...emptyDay(), activeDays: 0 }
   );
 
   const weekMinutes = Math.round(
