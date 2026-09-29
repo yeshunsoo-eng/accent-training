@@ -59,6 +59,11 @@ const Index = () => {
           </p>
         </div>
 
+        {/* Progress summary */}
+        <div className="mb-6 animate-fade-up" style={{ animationDelay: "80ms" }}>
+          <ProgressCard onOpen={() => setStatsOpen(true)} />
+        </div>
+
         {/* Mode cards */}
         <div className="space-y-4">
           <button
