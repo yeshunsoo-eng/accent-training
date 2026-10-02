@@ -1,11 +1,13 @@
-import { X, Flame, Clock, Mic, Headphones, Video, Trophy } from "lucide-react";
+import { Flame, Clock, Mic, Headphones, Video, Trophy } from "lucide-react";
 import { useStats } from "@/hooks/use-stats";
 import { formatDuration, resetStats, setGoalMinutes } from "@/lib/stats";
+import { Button } from "@/components/ui/button";
 
 const GOALS = [5, 10, 15, 20];
 
-export default function StatsPanel({ onClose }: { onClose: () => void }) {
+export default function StatsPanel() {
   const stats = useStats();
+  const progress = Math.min(100, Math.round((stats.todayMinutes / stats.goalMinutes) * 100));
 
   const tiles = [
     { icon: Clock, label: "Total practice", value: formatDuration(stats.totals.seconds) },
@@ -15,44 +17,59 @@ export default function StatsPanel({ onClose }: { onClose: () => void }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-foreground/40 backdrop-blur-sm p-0 sm:p-4">
-      <div className="w-full sm:max-w-md bg-background rounded-t-3xl sm:rounded-3xl p-6 max-h-[90vh] overflow-y-auto animate-fade-up">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-display text-foreground">Your progress</h2>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="p-2 rounded-full bg-secondary text-secondary-foreground active:scale-95"
-          >
-            <X className="w-4 h-4" />
-          </button>
+    <section className="animate-fade-up">
+        <div className="mb-6 rounded-lg bg-primary p-5 text-primary-foreground">
+          <div className="mb-4 flex items-start justify-between">
+            <div>
+              <p className="text-sm text-primary-foreground/80">Today’s practice</p>
+              <p className="mt-1 text-3xl font-display tabular-nums">{stats.todayMinutes} min</p>
+            </div>
+            <div className="flex items-center gap-1.5 text-sm font-medium">
+              <Flame className="h-5 w-5" />
+              {stats.currentStreak} day streak
+            </div>
+          </div>
+          <div className="mb-2 h-2 overflow-hidden rounded-full bg-primary-foreground/20">
+            <div className="h-full rounded-full bg-primary-foreground transition-all duration-500" style={{ width: `${progress}%` }} />
+          </div>
+          <p className="text-xs text-primary-foreground/80">{stats.todayMinutes} of {stats.goalMinutes} minute goal</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <div className="bg-card border border-border/60 rounded-2xl p-4">
+          <div className="bg-card border border-border/60 rounded-lg p-4">
             <Flame className="w-5 h-5 text-accent mb-2" />
             <p className="text-2xl font-display text-foreground">{stats.currentStreak}</p>
             <p className="text-xs text-muted-foreground">Current streak</p>
           </div>
-          <div className="bg-card border border-border/60 rounded-2xl p-4">
+          <div className="bg-card border border-border/60 rounded-lg p-4">
             <Trophy className="w-5 h-5 text-primary mb-2" />
             <p className="text-2xl font-display text-foreground">{stats.longestStreak}</p>
             <p className="text-xs text-muted-foreground">Best streak</p>
           </div>
         </div>
 
-        <p className="text-sm font-medium text-foreground mb-2">This week</p>
-        <div className="bg-card border border-border/60 rounded-2xl p-4 mb-6">
-          <p className="text-2xl font-display text-foreground">{stats.weekMinutes} min</p>
-          <p className="text-xs text-muted-foreground">
-            practised across the last 7 days · {stats.totals.activeDays} active days all time
-          </p>
+        <p className="text-sm font-semibold text-foreground mb-2">This week</p>
+        <div className="bg-card border border-border/60 rounded-lg p-4 mb-6">
+          <div className="mb-4 flex items-baseline justify-between">
+            <p className="text-2xl font-display text-foreground">{stats.weekMinutes} min</p>
+            <p className="text-xs text-muted-foreground">{stats.totals.activeDays} active days all time</p>
+          </div>
+          <div className="flex justify-between">
+            {stats.last7.map((day) => (
+              <div key={day.key} className="flex flex-col items-center gap-1.5">
+                <span className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium ${day.active ? "bg-primary text-primary-foreground" : day.isToday ? "border border-primary text-primary" : "bg-secondary text-muted-foreground"}`}>
+                  {day.label}
+                </span>
+                <span className="text-[10px] text-muted-foreground">{day.isToday ? "Today" : ""}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <p className="text-sm font-medium text-foreground mb-2">All time</p>
         <div className="grid grid-cols-2 gap-3 mb-6">
           {tiles.map((t) => (
-            <div key={t.label} className="bg-card border border-border/60 rounded-2xl p-4">
+            <div key={t.label} className="bg-card border border-border/60 rounded-lg p-4">
               <t.icon className="w-5 h-5 text-muted-foreground mb-2" />
               <p className="text-xl font-display text-foreground">{t.value}</p>
               <p className="text-xs text-muted-foreground">{t.label}</p>
@@ -63,32 +80,30 @@ export default function StatsPanel({ onClose }: { onClose: () => void }) {
         <p className="text-sm font-medium text-foreground mb-2">Daily goal</p>
         <div className="grid grid-cols-4 gap-2 mb-6">
           {GOALS.map((g) => (
-            <button
+            <Button
               key={g}
               onClick={() => setGoalMinutes(g)}
-              className={`py-2 rounded-lg text-sm font-medium transition-all ${
-                stats.goalMinutes === g
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "bg-secondary text-secondary-foreground"
-              }`}
+              variant={stats.goalMinutes === g ? "default" : "secondary"}
+              size="sm"
+              className="w-full px-1"
             >
               {g} min
-            </button>
+            </Button>
           ))}
         </div>
 
-        <button
+        <Button
           onClick={() => {
             if (confirm("Reset all your practice history?")) resetStats();
           }}
-          className="w-full py-3 rounded-full bg-secondary text-muted-foreground text-sm font-medium active:scale-95"
+          variant="secondary"
+          className="w-full text-muted-foreground"
         >
           Reset progress
-        </button>
+        </Button>
         <p className="text-xs text-muted-foreground text-center mt-4">
           Your progress is stored on this device only.
         </p>
-      </div>
-    </div>
+    </section>
   );
 }
