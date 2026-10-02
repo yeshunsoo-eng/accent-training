@@ -1,28 +1,31 @@
 import { useState } from "react";
-import { Mic, Headphones, ArrowLeft, Video } from "lucide-react";
+import { Mic, Headphones, ArrowLeft, Video, Dumbbell, ChartNoAxesCombined } from "lucide-react";
 import RandomWordPractice from "@/components/RandomWordPractice";
 import ListenAndFollow from "@/components/ListenAndFollow";
 import VideoRecordingPractice from "@/components/VideoRecordingPractice";
-import ProgressCard from "@/components/ProgressCard";
 import StatsPanel from "@/components/StatsPanel";
+import { Button } from "@/components/ui/button";
 
 type Mode = "home" | "random" | "listen" | "video";
+type Tab = "training" | "insights";
 
 const Index = () => {
   const [mode, setMode] = useState<Mode>("home");
-  const [statsOpen, setStatsOpen] = useState(false);
+  const [tab, setTab] = useState<Tab>("training");
 
   if (mode !== "home") {
     return (
-      <div className="min-h-screen bg-background px-4 py-8">
+      <div className="min-h-screen bg-background px-4 py-6 sm:py-8">
         <div className="max-w-2xl mx-auto">
-          <button
+          <Button
             onClick={() => setMode("home")}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 active:scale-95"
+            variant="ghost"
+            size="sm"
+            className="-ml-3 mb-6 text-muted-foreground"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back
-          </button>
+            Training
+          </Button>
 
           <h1 className="text-3xl font-display text-foreground mb-2 animate-fade-up">
             {mode === "random" ? "Random Word Practice" : mode === "listen" ? "Listen & Follow Along" : "Video Recording Practice"}
@@ -43,89 +46,81 @@ const Index = () => {
     );
   }
 
+  const exercises = [
+    { id: "random" as const, title: "Random Word Practice", description: "Speak one word at a time and build clear pronunciation.", detail: "2–5 min", icon: Mic, tone: "primary" },
+    { id: "listen" as const, title: "Listen & Follow Along", description: "Mimic a native speaker’s rhythm and intonation.", detail: "Daily phrases", icon: Headphones, tone: "accent" },
+    { id: "video" as const, title: "Video Recording Practice", description: "Speak to camera, review your delivery, and save it.", detail: "5–20 min", icon: Video, tone: "primary" },
+  ];
+
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-16">
-      <div className="max-w-md w-full text-center">
-        {/* Header */}
-        <div className="mb-12 animate-fade-up">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-            <Mic className="w-8 h-8 text-primary" />
-          </div>
-          <h1 className="text-4xl font-display text-foreground mb-3" style={{ lineHeight: 1.15 }}>
-            Accent Coach
-          </h1>
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            Train your English pronunciation with guided exercises and real-time practice.
-          </p>
-        </div>
+    <div className="min-h-screen bg-background pb-28">
+      <main className="mx-auto w-full max-w-md px-4 pt-8 sm:pt-12">
+        {tab === "training" ? (
+          <section className="animate-fade-up">
+            <header className="mb-8">
+              <p className="mb-1 text-sm font-semibold text-primary">Accent Coach</p>
+              <h1 className="text-4xl font-display text-foreground">Training</h1>
+              <p className="mt-2 text-muted-foreground">Choose a practice and give your voice a few focused minutes.</p>
+            </header>
 
-        {/* Progress summary */}
-        <div className="mb-6 animate-fade-up" style={{ animationDelay: "80ms" }}>
-          <ProgressCard onOpen={() => setStatsOpen(true)} />
-        </div>
-
-        {/* Mode cards */}
-        <div className="space-y-4">
-          <button
-            onClick={() => setMode("random")}
-            className="w-full group bg-card hover:bg-card/80 border border-border/60 rounded-2xl p-6 text-left transition-all duration-300 hover:shadow-md active:scale-[0.98] animate-fade-up"
-            style={{ animationDelay: "120ms" }}
-          >
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
-                <Mic className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h2 className="text-lg font-display text-foreground mb-1">Random Word Practice</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Words appear one at a time. Speak each clearly for 2–5 minutes to build muscle memory.
-                </p>
-              </div>
+            <div className="space-y-3">
+              {exercises.map((exercise) => (
+                <Button
+                  key={exercise.id}
+                  onClick={() => setMode(exercise.id)}
+                  variant="outline"
+                  className="group h-auto w-full justify-start whitespace-normal rounded-lg border-border/70 bg-card p-5 text-left hover:bg-card/80 hover:text-foreground"
+                >
+                  <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${exercise.tone === "accent" ? "bg-accent/10 text-accent" : "bg-primary/10 text-primary"}`}>
+                    <exercise.icon className="h-6 w-6" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-start justify-between gap-3">
+                      <span className="font-display text-lg text-foreground">{exercise.title}</span>
+                      <span className="shrink-0 text-xs font-medium text-muted-foreground">{exercise.detail}</span>
+                    </span>
+                    <span className="mt-1 block text-sm font-normal leading-relaxed text-muted-foreground">{exercise.description}</span>
+                  </span>
+                </Button>
+              ))}
             </div>
-          </button>
 
-          <button
-            onClick={() => setMode("listen")}
-            className="w-full group bg-card hover:bg-card/80 border border-border/60 rounded-2xl p-6 text-left transition-all duration-300 hover:shadow-md active:scale-[0.98] animate-fade-up"
-            style={{ animationDelay: "200ms" }}
+            <p className="mt-8 text-center text-xs text-muted-foreground">Your recordings and progress stay on this device.</p>
+          </section>
+        ) : (
+          <section>
+            <header className="mb-8 animate-fade-up">
+              <p className="mb-1 text-sm font-semibold text-primary">Your progress</p>
+              <h1 className="text-4xl font-display text-foreground">Insights</h1>
+              <p className="mt-2 text-muted-foreground">See your consistency and the practice you have completed.</p>
+            </header>
+            <StatsPanel />
+          </section>
+        )}
+      </main>
+
+      <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-lg">
+        <div className="mx-auto grid max-w-md grid-cols-2 gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => setTab("training")}
+            aria-current={tab === "training" ? "page" : undefined}
+            className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "training" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:bg-accent/15 transition-colors">
-                <Headphones className="w-6 h-6 text-accent" />
-              </div>
-              <div>
-                <h2 className="text-lg font-display text-foreground mb-1">Listen & Follow Along</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Hear a native speaker say common phrases, then mimic the accent and rhythm.
-                </p>
-              </div>
-            </div>
-          </button>
-          <button
-            onClick={() => setMode("video")}
-            className="w-full group bg-card hover:bg-card/80 border border-border/60 rounded-2xl p-6 text-left transition-all duration-300 hover:shadow-md active:scale-[0.98] animate-fade-up"
-            style={{ animationDelay: "280ms" }}
+            <Dumbbell className="h-5 w-5" />
+            <span className="text-xs">Training</span>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => setTab("insights")}
+            aria-current={tab === "insights" ? "page" : undefined}
+            className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "insights" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
-                <Video className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h2 className="text-lg font-display text-foreground mb-1">Video Recording Practice</h2>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Record yourself on the front camera for 5–20 minutes on a topic, then save the video.
-                </p>
-              </div>
-            </div>
-          </button>
+            <ChartNoAxesCombined className="h-5 w-5" />
+            <span className="text-xs">Insights</span>
+          </Button>
         </div>
-
-        <p className="text-xs text-muted-foreground mt-10 animate-fade-up" style={{ animationDelay: "300ms" }}>
-          Uses your browser's speech engine · No data leaves your device
-        </p>
-      </div>
-
-      {statsOpen && <StatsPanel onClose={() => setStatsOpen(false)} />}
+      </nav>
     </div>
   );
 };
