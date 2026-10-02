@@ -105,7 +105,7 @@ const Index = () => {
             variant="ghost"
             onClick={() => setTab("training")}
             aria-current={tab === "training" ? "page" : undefined}
-            className={`h-14 flex-col gap-1 ${tab === "training" ? "text-primary" : "text-muted-foreground"}`}
+            className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "training" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
             <Dumbbell className="h-5 w-5" />
             <span className="text-xs">Training</span>
@@ -114,7 +114,7 @@ const Index = () => {
             variant="ghost"
             onClick={() => setTab("insights")}
             aria-current={tab === "insights" ? "page" : undefined}
-            className={`h-14 flex-col gap-1 ${tab === "insights" ? "text-primary" : "text-muted-foreground"}`}
+            className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "insights" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
             <ChartNoAxesCombined className="h-5 w-5" />
             <span className="text-xs">Insights</span>
