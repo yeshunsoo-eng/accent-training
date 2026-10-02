@@ -103,21 +103,21 @@ const Index = () => {
         <div className="mx-auto grid max-w-md grid-cols-2 gap-2">
           <Button
             variant="ghost"
-            onClick={() => setTab("training")}
-            aria-current={tab === "training" ? "page" : undefined}
-            className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "training" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
-          >
-            <Dumbbell className="h-5 w-5" />
-            <span className="text-xs">Training</span>
-          </Button>
-          <Button
-            variant="ghost"
             onClick={() => setTab("insights")}
             aria-current={tab === "insights" ? "page" : undefined}
             className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "insights" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
             <ChartNoAxesCombined className="h-5 w-5" />
             <span className="text-xs">Insights</span>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => setTab("training")}
+            aria-current={tab === "training" ? "page" : undefined}
+            className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "training" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            <Dumbbell className="h-5 w-5" />
+            <span className="text-xs">Training</span>
           </Button>
         </div>
       </nav>
