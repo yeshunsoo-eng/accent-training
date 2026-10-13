@@ -99,25 +99,25 @@ const Index = () => {
         )}
       </main>
 
-      <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-lg">
-        <div className="mx-auto grid max-w-md grid-cols-2 gap-2">
+      <nav aria-label="Main navigation" className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/95 px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl">
+        <div className="mx-auto grid max-w-md grid-cols-2 gap-4">
           <Button
             variant="ghost"
             onClick={() => setTab("insights")}
             aria-current={tab === "insights" ? "page" : undefined}
-            className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "insights" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
+            className={`group h-16 flex-col gap-1.5 rounded-lg px-3 transition-colors duration-200 motion-reduce:transition-none ${tab === "insights" ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary" : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"}`}
           >
-            <ChartNoAxesCombined className="h-5 w-5" />
-            <span className="text-xs">Insights</span>
+            <ChartNoAxesCombined aria-hidden="true" className={`!h-6 !w-6 transition-transform duration-200 motion-reduce:transition-none ${tab === "insights" ? "scale-105" : "group-hover:scale-105"}`} strokeWidth={tab === "insights" ? 2.2 : 1.7} />
+            <span className={`text-xs leading-none ${tab === "insights" ? "font-semibold" : "font-medium"}`}>Insights</span>
           </Button>
           <Button
             variant="ghost"
             onClick={() => setTab("training")}
             aria-current={tab === "training" ? "page" : undefined}
-            className={`h-14 flex-col gap-1 hover:bg-transparent ${tab === "training" ? "text-primary hover:text-primary" : "text-muted-foreground hover:text-foreground"}`}
+            className={`group h-16 flex-col gap-1.5 rounded-lg px-3 transition-colors duration-200 motion-reduce:transition-none ${tab === "training" ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary" : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"}`}
           >
-            <Dumbbell className="h-5 w-5" />
-            <span className="text-xs">Training</span>
+            <Dumbbell aria-hidden="true" className={`!h-6 !w-6 transition-transform duration-200 motion-reduce:transition-none ${tab === "training" ? "scale-105" : "group-hover:scale-105"}`} strokeWidth={tab === "training" ? 2.2 : 1.7} />
+            <span className={`text-xs leading-none ${tab === "training" ? "font-semibold" : "font-medium"}`}>Training</span>
           </Button>
         </div>
       </nav>
