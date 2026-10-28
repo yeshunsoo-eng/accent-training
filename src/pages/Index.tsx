@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Mic, Headphones, ArrowLeft, Video, Dumbbell, ChartNoAxesCombined } from "lucide-react";
+import logo from "@/assets/logo.png";
 import RandomWordPractice from "@/components/RandomWordPractice";
 import ListenAndFollow from "@/components/ListenAndFollow";
 import VideoRecordingPractice from "@/components/VideoRecordingPractice";
@@ -58,7 +59,7 @@ const Index = () => {
         {tab === "training" ? (
           <section className="animate-fade-up">
             <header className="mb-8">
-              <p className="mb-1 text-sm font-semibold text-primary">Accent Coach</p>
+              <img src={logo} alt="Accent Coach" width={999} height={249} loading="lazy" className="mb-4 h-7 w-auto" />
               <h1 className="text-4xl font-display text-foreground">Training</h1>
               <p className="mt-2 text-muted-foreground">Choose a practice and give your voice a few focused minutes.</p>
             </header>
@@ -90,7 +91,7 @@ const Index = () => {
         ) : (
           <section>
             <header className="mb-8 animate-fade-up">
-              <p className="mb-1 text-sm font-semibold text-primary">Your progress</p>
+              <img src={logo} alt="Accent Coach" width={999} height={249} loading="lazy" className="mb-4 h-7 w-auto" />
               <h1 className="text-4xl font-display text-foreground">Insights</h1>
               <p className="mt-2 text-muted-foreground">See your consistency and the practice you have completed.</p>
             </header>
